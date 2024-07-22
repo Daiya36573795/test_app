@@ -1,0 +1,8 @@
+workflows:
+  default:
+    name: Default
+    max_build_duration: 60
+    scripts:
+      - name: Run tests
+        script: |
+          flutter test
