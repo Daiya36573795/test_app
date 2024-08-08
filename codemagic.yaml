@@ -17,23 +17,19 @@
 #           flutter test
 
 workflows:
-  flutter-workflow:
-    name: Flutter Workflow
+  ios-workflow:
+    name: iOS Workflow
     max_build_duration: 60
     environment:
-      flutter: stable
-      xcode: latest
+      vars:
+        FLUTTER_BUILD_DIR: build
     scripts:
       - name: Install Flutter dependencies
         script: |
           flutter pub get
-      - name: Run Flutter tests
+      - name: Build iOS app
         script: |
-          flutter test
-      - name: Build iOS
-        script: |
-          flutter build ios --release --no-codesign
-    publishing:
-      email:
-        recipients:
-          - m.daiya123@icloud.com
+          flutter build ipa --release --export-options-plist=/path/to/export_options.plist
+    artifacts:
+      - build/ios/ipa
+
