@@ -1,3 +1,21 @@
+# workflows:
+#   flutter-workflow:
+#     name: Flutter Workflow
+#     max_build_duration: 60
+#     environment:
+#       flutter: stable
+#       xcode: latest
+#     scripts:
+#       - name: Install Flutter dependencies
+#         script: |
+#           flutter pub get
+#       - name: Upgrade Flutter SDK
+#         script: |
+#           flutter upgrade
+#       - name: Run Flutter tests
+#         script: |
+#           flutter test
+
 workflows:
   flutter-workflow:
     name: Flutter Workflow
@@ -9,9 +27,13 @@ workflows:
       - name: Install Flutter dependencies
         script: |
           flutter pub get
-      - name: Upgrade Flutter SDK
-        script: |
-          flutter upgrade
       - name: Run Flutter tests
         script: |
           flutter test
+      - name: Build iOS
+        script: |
+          flutter build ios --release --no-codesign
+    publishing:
+      email:
+        recipients:
+          - m.daiya123@icloud.com
