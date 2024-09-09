@@ -23,9 +23,9 @@ class _MyAppState extends State<MyApp> {
 
   void initAppLinks() async {
     _appLinks = AppLinks(
-      onAppLink: (Uri uri) {  // 必須パラメータとしてのonAppLinkを追加
-        print("Received Link: $uri");  // リンクを受け取ったときの処理
-        _handleIncomingLink(uri);  // リンクに基づく処理（画面遷移など）
+      onAppLink: (Uri uri, String linkString) {  // onAppLinkの引数を修正
+        print("Received Link: $uri, Link String: $linkString");  // リンクを受け取ったときの処理
+        _handleIncomingLink(uri, linkString);  // リンクに基づく処理（画面遷移など）
       },
     );
 
@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       final Uri initialLink = await _appLinks.getInitialAppLink();  // アプリ起動時にリンクがあれば取得
       if (initialLink != null) {
         print("Initial Link: $initialLink");
-        _handleIncomingLink(initialLink);  // 初期リンクを処理
+        _handleIncomingLink(initialLink, initialLink.toString());  // 初期リンクを処理
       }
     } on Exception catch (e) {
       print("エラー: $e");
@@ -42,14 +42,14 @@ class _MyAppState extends State<MyApp> {
     _sub = _appLinks.uriLinkStream.listen((Uri uri) {  // リアルタイムでリンクを監視
       if (uri != null) {
         print("Streamed Link: $uri");
-        _handleIncomingLink(uri);  // ストリームでリンクが受信されたときの処理
+        _handleIncomingLink(uri, uri.toString());  // ストリームでリンクが受信されたときの処理
       }
     }, onError: (err) {
       print("ストリームエラー: $err");
     });
   }
 
-  void _handleIncomingLink(Uri uri) {
+  void _handleIncomingLink(Uri uri, String linkString) {
     // ここでリンクに基づく処理や画面遷移を実装
     if (uri.path == '/special') {
       Navigator.push(
