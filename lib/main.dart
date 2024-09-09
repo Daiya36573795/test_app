@@ -12,8 +12,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  StreamSubscription<Uri> _sub;
-  AppLinks _appLinks;
+  StreamSubscription<Uri?>? _sub;
+  AppLinks? _appLinks;
 
   @override
   void initState() {
@@ -23,26 +23,28 @@ class _MyAppState extends State<MyApp> {
 
   void initAppLinks() async {
     _appLinks = AppLinks(
-      onAppLink: (Uri uri, String linkString) {  // onAppLinkの引数を修正
-        print("Received Link: $uri, Link String: $linkString");  // リンクを受け取ったときの処理
-        _handleIncomingLink(uri, linkString);  // リンクに基づく処理（画面遷移など）
+      onAppLink: (Uri? uri, String linkString) {  // Nullable Uriに対応
+        if (uri != null) {
+          print("Received Link: $uri, Link String: $linkString");
+          _handleIncomingLink(uri, linkString);
+        }
       },
     );
 
     try {
-      final Uri initialLink = await _appLinks.getInitialAppLink();  // アプリ起動時にリンクがあれば取得
+      final Uri? initialLink = await _appLinks!.getInitialAppLink();  // Nullable型のUri?を使用
       if (initialLink != null) {
         print("Initial Link: $initialLink");
-        _handleIncomingLink(initialLink, initialLink.toString());  // 初期リンクを処理
+        _handleIncomingLink(initialLink, initialLink.toString());
       }
     } on Exception catch (e) {
       print("エラー: $e");
     }
 
-    _sub = _appLinks.uriLinkStream.listen((Uri uri) {  // リアルタイムでリンクを監視
+    _sub = _appLinks!.uriLinkStream.listen((Uri? uri) {  // Nullable Uriに対応
       if (uri != null) {
         print("Streamed Link: $uri");
-        _handleIncomingLink(uri, uri.toString());  // ストリームでリンクが受信されたときの処理
+        _handleIncomingLink(uri, uri.toString());
       }
     }, onError: (err) {
       print("ストリームエラー: $err");
