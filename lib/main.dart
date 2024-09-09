@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:app_links/app_links.dart'; // 変更箇所
 import 'dart:async';
 
 void main() {
@@ -13,51 +12,38 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   StreamSubscription _sub;
-  String _currentLink;
+  AppLinks _appLinks; // app_links用に変更
 
   @override
   void initState() {
     super.initState();
-    initUniLinks(); // ユニバーサルリンクの初期化
+    initAppLinks(); // app_links用に変更
   }
 
-  void initUniLinks() async {
+  void initAppLinks() async { // app_links用に変更
+    _appLinks = AppLinks();
+
     try {
-      final initialLink = await getInitialLink();
+      final initialLink = await _appLinks.getInitialAppLink(); // app_links用に変更
       if (initialLink != null) {
-        _handleIncomingLink(initialLink); // アプリ起動時のリンク処理
+        print("Initial Link: $initialLink");
       }
     } on Exception catch (e) {
-      print("エラー: $e"); // エラーハンドリング
+      print("エラー: $e");
     }
 
-    _sub = linkStream.listen((String link) {
+    _sub = _appLinks.uriLinkStream.listen((Uri link) { // app_links用に変更
       if (link != null) {
-        _handleIncomingLink(link); // リンクが取得された時の処理
+        print("Received Link: $link");
       }
     }, onError: (err) {
-      print("ストリームエラー: $err"); // ストリームエラーの処理
+      print("ストリームエラー: $err");
     });
-  }
-
-  void _handleIncomingLink(String link) {
-    setState(() {
-      _currentLink = link;
-    });
-
-    // ここでリンクに基づく画面遷移やデータ処理を行います
-    if (link.contains("special-path")) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SpecialPage()),
-      );
-    }
-    print("処理中のリンク: $link");
   }
 
   @override
   void dispose() {
-    _sub?.cancel(); // ストリームのキャンセル
+    _sub?.cancel();
     super.dispose();
   }
 
@@ -66,27 +52,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Uni Links Example'),
+          title: Text('App Links Example'),
         ),
         body: Center(
-          child: Text(_currentLink != null
-              ? 'Received Link: $_currentLink'
-              : 'Welcome to the Uni Links Demo'),
+          child: Text('Welcome to the App Links Demo'),
         ),
-      ),
-    );
-  }
-}
-
-class SpecialPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Special Page'),
-      ),
-      body: Center(
-        child: Text('This is a special page triggered by a deep link!'),
       ),
     );
   }
