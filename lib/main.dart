@@ -1,4 +1,5 @@
-import 'package:app_links/app_links.dart'; // 変更箇所
+import 'package:flutter/material.dart';  // 確認
+import 'package:app_links/app_links.dart';  // app_links 用
 import 'dart:async';
 
 void main() {
@@ -12,19 +13,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   StreamSubscription _sub;
-  AppLinks _appLinks; // app_links用に変更
+  AppLinks _appLinks;
 
   @override
   void initState() {
     super.initState();
-    initAppLinks(); // app_links用に変更
+    initAppLinks();
   }
 
-  void initAppLinks() async { // app_links用に変更
+  void initAppLinks() async {
     _appLinks = AppLinks();
 
     try {
-      final initialLink = await _appLinks.getInitialAppLink(); // app_links用に変更
+      final initialLink = await _appLinks.getInitialAppLink();
       if (initialLink != null) {
         print("Initial Link: $initialLink");
       }
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       print("エラー: $e");
     }
 
-    _sub = _appLinks.uriLinkStream.listen((Uri link) { // app_links用に変更
+    _sub = _appLinks.uriLinkStream.listen((Uri link) {
       if (link != null) {
         print("Received Link: $link");
       }
