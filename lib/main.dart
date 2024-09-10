@@ -9,7 +9,7 @@ final router = GoRouter(
     GoRoute(
       path: '/',
       builder: (_, __) => Scaffold(
-        appBar: AppBar(title: const Text('Home Screen')),
+        appBar: AppBar(title: const Text('Home Screen Ver.1')),
       ),
       routes: [
         GoRoute(
